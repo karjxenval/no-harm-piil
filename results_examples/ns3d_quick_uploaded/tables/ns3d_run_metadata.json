@@ -1,0 +1,31 @@
+{
+  "script": "no_harm_piil_ns3d_industrial.py",
+  "mode": "quick",
+  "N": 24,
+  "grid_points_total": 13824,
+  "velocity_degrees_of_freedom": 41472,
+  "L": 6.283185307179586,
+  "dx": 0.2617993877991494,
+  "T": 0.0795,
+  "dt": 0.0015,
+  "n_steps": 53,
+  "nu_reference": 0.01,
+  "n_sensors": 96,
+  "sensor_components": 288,
+  "noise_fraction": 0.01,
+  "delta_normalized": 0.010584666162512206,
+  "C_stab_randomized_observability": 0.20719143898512055,
+  "sigma_min_observability": 4.82645424395076,
+  "observability_condition_number": 3.141680433514416,
+  "safe_choice": "learned_calibrated_dns",
+  "python": "3.11.15",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "wall_seconds_total_solver_only": 35.09952450000128,
+  "candidate_notes": {
+    "reference_dns": "Reference pseudo-spectral 3D Navier--Stokes run.",
+    "baseline_robust_dns": "Conservative baseline: slightly dissipative and amplitude-biased but fully PDE-integrated.",
+    "learned_calibrated_dns": "Learned/calibrated candidate close to the reference physical parameters; fully PDE-integrated.",
+    "learned_aggressive_dns": "Aggressive learned extrapolation: lower viscosity and higher initial energy; fully PDE-integrated but risky.",
+    "learned_sensor_overfit_field": "Risky high-wavenumber sensor-fitting field; useful as a no-harm stress test."
+  }
+}

@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+title: "No-Harm PIIL: Residual-Calibrated Certification for Physics-Informed Inverse Learning"
+message: "If you use this repository, please cite the associated manuscript or this software record."
+type: software
+authors:
+  - family-names: Katende
+    given-names: Ronald
+version: 0.1.0
+date-released: 2026-06-19
+license: MIT
+keywords:
+  - physics-informed learning
+  - inverse problems
+  - no-harm certification
+  - Navier-Stokes
+  - scientific machine learning
+repository-code: "https://github.com/karjxenval/noharm-piil"
