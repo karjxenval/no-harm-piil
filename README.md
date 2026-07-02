@@ -1,135 +1,109 @@
-# No-Harm PIIL: Industrial-Grade Validation Suite
+# No-Harm Physics-Informed Inverse Learning (PIIL)
 
-This repository contains reproducible validation code for **no-harm physics-informed inverse learning (PIIL)**.
+Repository for the numerical validation code accompanying the manuscript:
 
-The central rule is simple:
+**No-Harm Physics-Informed Inverse Learning with Residual-Certified Selection**
+
+The core principle is simple: a learned physics-informed inverse reconstruction is allowed to replace a baseline only when its residual-calibrated certificate is no worse than the baseline certificate:
+
+```math
+R_{\mathrm{learn}} \le R_{\mathrm{base}} + \varepsilon_{\mathrm{safe}}.
+```
+
+If this condition fails, the method falls back to the baseline. The repository is therefore organized around **reconstruct, certify, and select**, not around a single neural architecture.
+
+## Repository structure
 
 ```text
-A learned physics-informed reconstruction replaces a robust baseline only when
-its residual-calibrated certificate is no worse than the baseline certificate.
+scripts/
+  download_light_piil_pde_data.py          Download public PDE benchmark .mat files.
+  check_piil_data.py                       Inspect downloaded benchmark files.
+  piil_public_pde_validation_v3_gated.py   Main public-PDE validation used in the manuscript.
+  piil_public_pde_validation_v1.py         Earlier public-PDE validation script.
+  no_harm_piil_controlled_validation.py    Controlled finite-dimensional inverse-problem validation.
+  no_harm_piil_sufficiency_map.py          21,000-trial no-harm sufficiency sweep.
+  no_harm_piil_ns3d_industrial.py          Optional 3D Navier--Stokes industrial/scientific-computing stress test.
 
-R_learn <= R_base + eps_safe
+outputs/public_pde_v3/tables/
+  dataset_summary.csv
+  candidate_summary.csv
+  physics_necessity_summary.csv
+  noharm_decisions.csv
+  piil_trials_raw.csv
+  run_metadata.json
+  manuscript_findings.txt
+  manuscript_main_table.tex
+  manuscript_necessity_table.tex
+
+docs/
+  REPRODUCIBILITY.md
+  PAPER_RESULTS_SUMMARY.md
+  GITHUB_DESCRIPTION.md
 ```
 
-This makes the repository different from ordinary PINN demonstration code. It does not only show attractive plots. It records **data fit, PDE residuals, stability diagnostics, optimization/energy defects, uncertainty radii, and fallback decisions**.
+## Quick start
 
-## What is included
+Create an environment:
 
-```text
-src/noharm_piil/                  Reusable certificate and no-harm decision utilities
-scripts/no_harm_piil_validation.py
-                                  Multi-problem inverse-learning validation suite
-scripts/no_harm_piil_sufficiency_map.py
-                                  Sufficiency-threshold sweep and diagnostic maps
-scripts/no_harm_piil_ns3d_industrial.py
-                                  Full 3D incompressible Navier--Stokes validation
-examples/                         Minimal examples and smoke-test wrapper
-tests/                            Lightweight unit tests
-docs/                             Technical notes and run guide
-results_examples/                 Uploaded quick/smoke run tables and metadata
+```bash
+python -m venv .venv
+source .venv/bin/activate      # Linux/macOS
+# .venv\Scripts\activate       # Windows
+pip install -r requirements.txt
 ```
 
-## Industrial 3D Navier--Stokes case
+Download the public PDE benchmark data:
 
-The third script runs a real 3D incompressible Navier--Stokes validation case on a periodic box:
-
-```text
-u_t + (u . grad)u = -grad p + nu Laplacian u,
-div u = 0.
+```bash
+python scripts/download_light_piil_pde_data.py --out data/PIIL_LIGHT_PDE_DATA --set tiny
+python scripts/check_piil_data.py
 ```
 
-Numerics:
+Run the main public-PDE validation:
 
-- Fourier pseudo-spectral discretization,
-- Leray projection for incompressibility,
-- 2/3 de-aliasing,
-- explicit RK4 time stepping,
-- Taylor--Green vortex initial condition.
-
-It reports scientific-computing KPIs that matter in serious PDE work:
-
-- sensor RMSE,
-- momentum residual,
-- divergence residual,
-- kinetic-energy budget defect,
-- high-wavenumber energy contamination,
-- final DNS error,
-- CFL,
-- wall-clock cost,
-- certificate radius,
-- no-harm fallback decision.
-
-## Install with Anaconda Prompt
-
-```bat
-conda create -n noharm_piil python=3.11 numpy pandas matplotlib scipy pytest -y
-conda activate noharm_piil
-pip install -e .
+```bash
+python scripts/piil_public_pde_validation_v3_gated.py \
+  --data data/PIIL_LIGHT_PDE_DATA \
+  --out results/public_pde_v3 \
+  --trials 5 \
+  --seed 2026
 ```
 
-Or use the environment file:
+Run the controlled inverse-problem validation:
 
-```bat
-conda env create -f environment.yml
-conda activate noharm-piil
+```bash
+python scripts/no_harm_piil_controlled_validation.py --out results/controlled --seed 123
 ```
 
-## Smoke test
+Run the no-harm sufficiency sweep:
 
-```bat
-python scripts\no_harm_piil_ns3d_industrial.py --mode smoke --out runs\ns3d_smoke
+```bash
+python scripts/no_harm_piil_sufficiency_map.py --out results/sufficiency_map --seed 2026
 ```
 
-## Quick serious run
+Optional 3D Navier--Stokes smoke test:
 
-```bat
-python scripts\no_harm_piil_ns3d_industrial.py --mode quick --out runs\ns3d_quick
+```bash
+python scripts/no_harm_piil_ns3d_industrial.py --mode smoke --out results/ns3d_smoke
 ```
 
-## Main validation suite
+## Main manuscript numbers
 
-```bat
-python scripts\no_harm_piil_validation.py --out runs\validation_suite --seed 123
-```
+The included V3 public-PDE tables correspond to:
 
-## Sufficiency map
+- Five public PDE benchmark fields: Burgers shock, Allen--Cahn, Korteweg--de Vries, Kuramoto--Sivashinsky, and nonlinear Schrödinger.
+- 400 dataset/regime cases.
+- Mean no-harm selected-output gain of 12.98% relative to the baseline.
+- Physics-informed candidates necessary in 68.5% of regimes.
+- Certificate-driven fallback/rejection rate for physics-filtered candidates of 4.2%.
+- Unsafe selected-output rate of 6.0%.
 
-```bat
-python scripts\no_harm_piil_sufficiency_map.py --out runs\sufficiency_map --seed 2026 --reps 25
-```
+These are empirical diagnostics for the stated candidate family, certificate weights, sparsity/noise grid, and random seed. They are not universal constants.
 
-For a faster local check:
+## Data note
 
-```bat
-python scripts\no_harm_piil_sufficiency_map.py --out runs\sufficiency_smoke --seed 2026 --reps 2
-```
-
-## Test the repository
-
-```bat
-python -m pytest
-python -m py_compile scripts\no_harm_piil_validation.py scripts\no_harm_piil_sufficiency_map.py scripts\no_harm_piil_ns3d_industrial.py
-```
-
-## Expected no-harm behavior
-
-The 3D Navier--Stokes script is designed to distinguish candidates:
-
-- `baseline_robust_dns`: conservative, safe fallback;
-- `learned_calibrated_dns`: calibrated learned parameter DNS, usually accepted;
-- `learned_aggressive_dns`: risky extrapolation, usually rejected;
-- `learned_sensor_overfit_field`: sensor-fitting high-wavenumber field, rejected by residual/energy/spectrum checks.
-
-The uploaded quick run selected:
-
-```text
-safe_choice = learned_calibrated_dns
-```
-
-## Important scope note
-
-This repository is not a replacement for production CFD solvers such as OpenFOAM, Nek5000, Dedalus, or spectralDNS. It is a compact, reproducible, dependency-light validation platform for **no-harm certification logic** in physics-informed inverse learning.
+The `.mat` benchmark files are not stored in this repository. Use `scripts/download_light_piil_pde_data.py` to download them from the public PINNs repository. Generated summary CSVs and manuscript-ready tables are included under `outputs/public_pde_v3/tables/` for reproducibility and review.
 
 ## Citation
 
-Use `CITATION.cff` or cite the associated manuscript/software release.
+If you use this repository, please cite the accompanying manuscript and the public PINNs benchmark source used for the PDE data.

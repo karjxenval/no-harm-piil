@@ -34,7 +34,7 @@ The experiment is deliberately finite-dimensional and reproducible. It uses a
 
 Run
 ---
-python no_harm_piil_sufficiency_map.py --out results_noharm_map --seed 2026
+python scripts/no_harm_piil_sufficiency_map.py --out results_noharm_map --seed 2026
 
 Dependencies
 ------------

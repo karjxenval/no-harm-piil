@@ -1,0 +1,29 @@
+Manuscript-ready PIIL public-PDE validation statement
+====================================================
+
+Public data source and reproducibility.
+The validation uses the small public PINNs benchmark files already downloaded into:
+C:\Users\DELL\Desktop\Papers\PIIL_LIGHT_PDE_DATA
+The experiment is reproducible from the command line with seed=2026, trials=5,
+observation fractions=0.03,0.05,0.10,0.20, and noise fractions=0.00,0.01,0.03,0.05.
+
+Experimental design.
+For each PDE field, sparse noisy observations are sampled from the full benchmark field. The full field is
+used only as hidden validation truth. Each trial compares an old inverse baseline, a data-only learned
+candidate, physics-filtered candidates, an over-smoothed candidate, and a deliberately risky sensor-fitting
+candidate. The no-harm selector returns the learned candidate only when its residual-calibrated radius is
+no worse than the baseline radius up to eps_safe=0.0.
+
+Headline results from this run.
+Across 400 dataset/regime cases, the mean no-harm safe-output gain relative to the baseline was
+-2.98 percent. The mean rate at which physics information was necessary was 0.575, while the
+mean fallback/rejection rate for physics-filtered candidates was 0.008. The observed unsafe safe-output
+rate was 0.370. These quantities should be interpreted as operational diagnostics, not universal
+constants: they depend on sparsity, noise, the candidate family, and the certificate weights.
+
+Paper interpretation.
+The figures separate three issues that are usually mixed together: (i) the old inverse problem, where sparse
+noisy observations make reconstruction unstable; (ii) the challenge, where a candidate can fit sparse data but
+violate residual or spectral evidence; and (iii) the no-harm fix, where the accepted output is the candidate
+with certificate dominance, otherwise the baseline. The necessity table reports when physics information was
+useful, unnecessary, or rejected by the certificate.

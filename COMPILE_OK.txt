@@ -1,0 +1,1 @@
+All scripts compiled with py_compile during packaging.

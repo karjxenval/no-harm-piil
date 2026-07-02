@@ -1,0 +1,39 @@
+{
+  "data_dir": "C:\\Users\\DELL\\Desktop\\Papers\\PIIL_LIGHT_PDE_DATA",
+  "out_dir": "C:\\Users\\DELL\\Desktop\\Papers\\PIIL_PUBLIC_PDE_RESULTS_V3",
+  "datasets": [
+    "burgers",
+    "allen_cahn",
+    "kdv",
+    "nls",
+    "ks"
+  ],
+  "trials": 5,
+  "obs_fractions": [
+    0.03,
+    0.05,
+    0.1,
+    0.2
+  ],
+  "noise_fractions": [
+    0.0,
+    0.01,
+    0.03,
+    0.05
+  ],
+  "holdout_fraction": 0.2,
+  "seed": 2026,
+  "eps_safe": 0.0,
+  "rank": 20,
+  "svd_iter": 14,
+  "weights": {
+    "data": 1.0,
+    "pde": 0.15,
+    "bc": 0.05,
+    "ic": 0.05,
+    "spectral": 0.05,
+    "noise": 1.0
+  },
+  "python": "3.10.20",
+  "platform": "Windows-10-10.0.26200-SP0"
+}

@@ -1,0 +1,18 @@
+\begin{table*}[!ht]
+\centering
+\caption{Public PDE benchmark summary for no-harm PIIL selection.}
+\label{tab:piil-public-pde-summary}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrrrrrrr}
+\toprule
+Dataset & Cases & Baseline error & No-harm output error & Safe gain (\%) & PI necessary rate & PI fallback rate & Unsafe output rate \\
+\midrule
+Allen-Cahn & 80 & 0.036 & 0.031 & 13.445 & 0.775 & 0.000 & 0.062 \\
+Burgers shock & 80 & 0.100 & 0.097 & 1.948 & 0.325 & 0.087 & 0.050 \\
+Korteweg-de Vries & 80 & 0.035 & 0.029 & 20.595 & 0.900 & 0.013 & 0.000 \\
+Kuramoto-Sivashinsky & 80 & 0.024 & 0.019 & 20.226 & 0.875 & 0.113 & 0.000 \\
+Nonlinear Schrodinger & 80 & 0.042 & 0.038 & 8.691 & 0.550 & 0.000 & 0.188 \\
+\bottomrule
+\end{tabular}%
+}
+\end{table*}

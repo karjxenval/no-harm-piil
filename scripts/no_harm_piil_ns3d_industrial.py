@@ -66,19 +66,19 @@ Examples
 --------
 Smoke test, small and fast:
 
-    python no_harm_piil_ns3d_industrial.py --mode smoke --out results_ns3d_smoke
+    python scripts/no_harm_piil_ns3d_industrial.py --mode smoke --out results_ns3d_smoke
 
 Quick serious run:
 
-    python no_harm_piil_ns3d_industrial.py --mode quick --out results_ns3d_quick
+    python scripts/no_harm_piil_ns3d_industrial.py --mode quick --out results_ns3d_quick
 
 Heavier run:
 
-    python no_harm_piil_ns3d_industrial.py --mode full --out results_ns3d_full
+    python scripts/no_harm_piil_ns3d_industrial.py --mode full --out results_ns3d_full
 
 Custom run:
 
-    python no_harm_piil_ns3d_industrial.py --N 32 --T 0.12 --dt 0.001 --n-sensors 96 --out results_custom
+    python scripts/no_harm_piil_ns3d_industrial.py --N 32 --T 0.12 --dt 0.001 --n-sensors 96 --out results_custom
 """
 
 from __future__ import annotations
@@ -1134,7 +1134,6 @@ def main() -> None:
     else:
         safe_choice = "baseline_robust_dns"
     summary.loc[summary["candidate"] != "reference_dns", "safe_choice"] = safe_choice
-    noharm = summary[summary["candidate"] != "reference_dns"].copy()
 
     # ------------------------------------------------------------------
     # Save tables and metadata

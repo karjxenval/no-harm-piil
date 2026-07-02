@@ -1,13 +1,11 @@
-name: noharm-piil
+name: no-harm-piil
 channels:
   - conda-forge
 dependencies:
-  - python=3.11
+  - python>=3.10
   - numpy
+  - scipy
   - pandas
   - matplotlib
-  - scipy
-  - pytest
-  - pip
-  - pip:
-      - -e .
+  - requests
+  - tqdm
